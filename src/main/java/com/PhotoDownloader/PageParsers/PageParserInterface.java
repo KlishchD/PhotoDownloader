@@ -13,6 +13,4 @@ public interface PageParserInterface {
 
     List<List<String>> parse() throws IOException;
 
-
-
 }

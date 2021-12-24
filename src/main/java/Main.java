@@ -20,7 +20,7 @@ public class Main {
 */
         SelectorsPageParser selectorsPageParser = new SelectorsPageParser(3, 5);
 
-        //        String pathForSelectors = System.getProperty("user.home") + "/Documents/Test/Selectors";
+        String pathForSelectors = System.getProperty("user.home") + "/Documents/Test/Selectors";
 
 
         List<List<String>> links = selectorsPageParser.parse();
@@ -31,5 +31,6 @@ public class Main {
             }
             System.out.println("---------_____________-------------");
         }
+        MultithreadedDownloader.download(links, pathForSelectors);
     }
 }

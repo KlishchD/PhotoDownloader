@@ -1,7 +1,6 @@
 package com.PhotoDownloader.PageParsers;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,11 +45,20 @@ public class RegexPageParser implements PageParserInterface {
     }
 
     private List<String> getGroupsLinks() {
-        return findPatternMatchingLinesInString(GROUPS_RELATIVE_URL_PATTERN, getHTMLFromPage(HOME_PAGE_URL), groupsNumber).stream().map(this::getURL).collect(Collectors.toList());
+        return getRelativeGroupsURLs().stream().map(this::getURL).collect(Collectors.toList());
+    }
+
+    private List<String> getRelativeGroupsURLs() {
+        return findPatternMatchingLinesInString(GROUPS_RELATIVE_URL_PATTERN, getHTMLFromPage(HOME_PAGE_URL), groupsNumber);
     }
 
     private List<List<String>> getPhotosLinksFromGroups(List<String> groupsLinks) {
-        return groupsLinks.stream().map(x -> findPatternMatchingLinesInString(PHOTO_URL_PATTERN, getHTMLFromPage(x), photosNumber).stream().map(this::fixURL).collect(Collectors.toList())).collect(Collectors.toList());
+        return groupsLinks.stream().map(this::getPhotosLinksFromGroup).collect(Collectors.toList());
+    }
+
+    private List<String> getPhotosLinksFromGroup(String link) {
+        return findPatternMatchingLinesInString(PHOTO_URL_PATTERN, getHTMLFromPage(link), photosNumber)
+                .stream().map(this::fixURL).collect(Collectors.toList());
     }
 
     private List<String> findPatternMatchingLinesInString(Pattern pattern, String string, int timesToMatch) {
@@ -66,8 +74,7 @@ public class RegexPageParser implements PageParserInterface {
 
     private String getHTMLFromPage(String pageURL) {
         try {
-            Document document = Jsoup.connect(pageURL).get();
-            return document.toString();
+            return Jsoup.connect(pageURL).get().toString();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -13,13 +13,10 @@ class DownloaderTask implements Runnable {
         this.directoryPath = directoryPath;
     }
 
-
     @Override
     public void run() {
-        Downloader downloader = new Downloader(links, directoryPath);
-
         try {
-            downloader.download();
+            new Downloader(links, directoryPath).download();
         } catch (IOException e) {
             e.printStackTrace();
         }

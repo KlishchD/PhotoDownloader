@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 public class Downloader {
     private final int BUFFER_SIZE_FOR_FILE_COPYING_SIZE = 1024;
+    Pattern FILENAME_PATTERN = Pattern.compile(".*/([\\w=\\-?&.;%]*)$");
+
     private List<String> photoLinks = new ArrayList<>();
     private String directoryPath;
 
@@ -66,8 +68,7 @@ public class Downloader {
     }
 
     private String getName(String link) {
-        Pattern pattern = Pattern.compile(".*/([\\w=\\-?&.;]*)$");
-        Matcher matcher = pattern.matcher(link);
+        Matcher matcher = FILENAME_PATTERN.matcher(link);
         matcher.find();
         return matcher.group(1) + matcher.hashCode();
     }

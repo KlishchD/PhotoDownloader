@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class SelectorsPageParser implements PageParserInterface {
     private final String HOME_PAGE_URL = "https://unsplash.com";
-    private final String PHOTO_CSS_SELECTOR = "img[class=\"YVj9w\"][itemprop=\"thumbnailUrl\"]";
+    private final String PHOTO_CSS_SELECTOR = "img[class=\"YVj9w\"]";
     private final String GROUPS_CSS_SELECTOR = "a[class=p7ajO]";
 
     private int groupsNumber;
@@ -44,11 +44,16 @@ public class SelectorsPageParser implements PageParserInterface {
     }
 
     private List<String> getPhotosLinks(String link) {
-        return getDocumentFromURL(link).select(PHOTO_CSS_SELECTOR).eachAttr("src").stream().limit(photosNumber).collect(Collectors.toList());
+        return getDocumentFromURL(link)
+                .select(PHOTO_CSS_SELECTOR).eachAttr("src")
+                .stream().limit(photosNumber).collect(Collectors.toList());
     }
 
     private List<String> getGroupsLinks() {
-        return getDocumentFromURL(HOME_PAGE_URL).select(GROUPS_CSS_SELECTOR).eachAttr("href").stream().limit(groupsNumber).map(this::getURL).collect(Collectors.toList());
+        return getDocumentFromURL(HOME_PAGE_URL)
+                .select(GROUPS_CSS_SELECTOR).eachAttr("href")
+                .stream().limit(groupsNumber).map(this::getURL)
+                .collect(Collectors.toList());
     }
 
     private String getURL(String relativeURL) {
